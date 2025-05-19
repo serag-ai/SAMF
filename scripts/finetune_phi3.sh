@@ -1,0 +1,33 @@
+deepspeed  ../vlm/src/train/train.py \
+    --version v0 \
+    --model_name_or_path microsoft/Phi-3-mini-4k-instruct \
+    --model_type phi3 \
+    --lora_enable True  --lora_r 16 \
+    --vision_tower dino_large \
+    --mm_fuse_type samf \
+    --mm_projector_type aggregator \
+    --pretrain_vision_model PATH_TO_PRETRAINED_IMAGE_ENCODER \
+    --bf16 True \
+    --output_dir /PATH_TO_OUTPUT_DIR \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 1 \
+    --evaluation_strategy "steps" \
+    --eval_accumulation_steps 1 \
+    --eval_steps 0.5 \
+    --save_strategy "steps" \
+    --save_steps 10000 \
+    --save_total_limit 5 \
+    --learning_rate 5e-5 \
+    --weight_decay 0. \
+    --warmup_ratio 0.03 \
+    --lr_scheduler_type "cosine" \
+    --logging_steps 0.1 \
+    --gradient_checkpointing False \
+    --dataloader_pin_memory True\
+    --dataloader_num_workers 8 \
+    --data_root PATH_TO_DATASET_DIR/ \
+    --csv_train_path PATH_TO_TRAINING_FILE/ \
+    --csv_validation_ath PATH_TO_VALIDATION_FILE/ \
+    --report_to none
