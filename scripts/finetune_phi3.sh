@@ -28,6 +28,6 @@ deepspeed  ../vlm/src/train/train.py \
     --dataloader_pin_memory True\
     --dataloader_num_workers 8 \
     --data_root PATH_TO_DATASET_DIR/ \
-    --csv_train_path PATH_TO_TRAINING_FILE/ \
-    --csv_validation_ath PATH_TO_VALIDATION_FILE/ \
+    --train_csv_file PATH_TO_TRAINING_FILE/ \
+    --val_csv_file PATH_TO_VALIDATION_FILE/ \
     --report_to none

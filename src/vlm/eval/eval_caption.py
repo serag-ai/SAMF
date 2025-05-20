@@ -49,6 +49,11 @@ def parse_args(args=None):
         default="PATH_TO_TEST_DIR/",
     )
     parser.add_argument(
+        "--csv_file",
+        type=str,
+        default="/acfs-home/abh4006/serag_AI_lab/shared/ct_rate/ct_rate_validation.csv",
+    )
+    parser.add_argument(
         "--output_dir",
         type=str,
         default="./evaluation",
@@ -77,9 +82,6 @@ def main():
         use_fast=False,
         trust_remote_code=True,
     )
-    # model = AutoModelForCausalLM.from_pretrained(
-    #     args.model_name_or_path, device_map="auto", trust_remote_code=True
-    # )
 
     model = LlavaPhi3ForCausalLM.from_pretrained(
         args.model_name_or_path, device_map="auto", cache_dir=None
@@ -98,7 +100,7 @@ def main():
 
     test_dataset = CT_RATE_CapDataset(
         args,
-        csv_path="PATH_TO_TEST_DIR/test.csv",
+        csv_path=args.csv_file,
         tokenizer=tokenizer,
         mode="test",
     )  # test1k
