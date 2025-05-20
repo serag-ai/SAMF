@@ -10,7 +10,7 @@ This is an official implementation of **[MICCAI 2025]** - From Slices to Volumes
 A methodology that utilize both the high-level spatial features of 3D data and the rich local details of 2D slices. Our approach begins by pretraining a 2D encoder using a self-supervised learning framework on CT scan slices from three planes: axial, coronal, and sagittal. The outputs of this 2D encoder are then processed by a 3D aggregator to preserve volumetric temporal relationships between slices. Additionally, we introduce a novel fusion technique, Slice-Attentive Multimodal Fusion (SAMF), designed to seamlessly combine 2D and 3D features, enabling richer and more contextually aware representations, see figure below. This fused representation is then fed into an LLM to generate medical reports.
 
  <p align="center">
-  <img align="center" src="assets/arch.svg" width="600px" alt="Slice-Attentive Multi-Modal Fusion architecture. The framework projects three feature spaces (f3d, text tokens, and f2d) into a shared representation space for crossmodal fusion and interaction."/>
+  <img align="center" src="assets/arch.svg" width="500px"/>
  </p>
 
 ## Installation
