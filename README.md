@@ -2,21 +2,50 @@
 
 This is an official implementation of **[MICCAI 2025]** - From Slices to Volumes: Multi-Scale Fusion of 2D and 3D Features for CT Scan Report Generation
 
-## Workflow overview
+## Project overview
  <p align="center">
-  <img align="center" src="assets/arch.svg" width="500px"/>
+  <img align="center" src="assets/intro.png" width="800px" alt="Architectural overview of the proposed medical report generation framework, incorporating slice-wise encoding, user prompts, and volumetric features through SAMF fusion methodology."/>
  </p>
 
-A methodology that utilize both the high-level spatial features of 3D data and the rich local details of 2D slices. Our approach begins by pretraining a 2D encoder using a self-supervised learning framework on CT scan slices from three planes: axial, coronal, and sagittal. The outputs of this 2D encoder are then processed by a 3D aggregator to preserve volumetric temporal relationships between slices. Additionally, we introduce a novel fusion technique that integrates the outputs of the aggregator, the 2D encoder, and a prompt, effectively bridging the gap between 2D and 3D representations. This fused representation is then fed into an LLM to generate medical reports.
+A methodology that utilize both the high-level spatial features of 3D data and the rich local details of 2D slices. Our approach begins by pretraining a 2D encoder using a self-supervised learning framework on CT scan slices from three planes: axial, coronal, and sagittal. The outputs of this 2D encoder are then processed by a 3D aggregator to preserve volumetric temporal relationships between slices. Additionally, we introduce a novel fusion technique, Slice-Attentive Multimodal Fusion (SAMF), designed to seamlessly combine 2D and 3D features, enabling richer and more contextually aware representations, see figure below. This fused representation is then fed into an LLM to generate medical reports.
+
+ <p align="center">
+  <img align="center" src="assets/arch.svg" width="600px" alt="Slice-Attentive Multi-Modal Fusion architecture. The framework projects three feature spaces (f3d, text tokens, and f2d) into a shared representation space for crossmodal fusion and interaction."/>
+ </p>
+
+## Installation
+
+Set up the environment as follows:
+
+```sh
+git clone https://github.com/serag-ai/SAMF.git
+cd SAMF
+conda create -n samf python=3.10
+conda activate samf
+pip install -r requirements.txt
+```
+
+## Pretraining Image Encoder
+
+To pretrain the slice-based image encoder, run:
+
+```sh
+python3 -u src/dino/dino.py --epochs 500 \
+                            --output_dir PATH_TO_OUTPUT_DIR \
+                            --batch_size 32
+```
+
+Replace `PATH_TO_OUTPUT_DIR` with your desired output directory.
 
 ## Finetuning
 
-To fine-tune the model, run following step:
+To fine-tune the model, run the following script:
 
-**Run Fine-Tuning Script** 🛠️:
-   ```sh
-   sh script/finetune_phi3.sh
-   ```
+```sh
+sh script/finetune_phi3.sh
+```
+
+Ensure you have set the dataset directory and related file paths in your bash script before running the script. Refer to `script/finetune_phi3.sh` for detailed configuration.
 
 ## Merge
 
@@ -44,13 +73,19 @@ To perform evaluation using provided metrics, follow :
 
 ## Dataset
 
-Downlaod [CT-Rate](https://huggingface.co/datasets/ibrahimhamamci/CT-RATE) dataset. For this work, we have converted the data into CSV files. The format for training captions should be as follows:
+Download the [CT-Rate](https://huggingface.co/datasets/ibrahimhamamci/CT-RATE) dataset. For this work, we have converted the data into CSV files.
 
-| **image**   | **caption** | **label** |
-|-------------|-------------|-----------|
-| image_path  | text        | organ     |
+The format for training medical report generation is:
 
+| **image**   | **caption** |
+|-------------|-------------|
+| image_path  | text        |
 
+For visual-question answering (VQA), the CSV header is as follows:
+
+| **Question ID** | **Image** | **Question** | **Choice A** | **Choice B** | **Choice C** | **Choice D** | **Answer Choice** | **Answer** |
+|-----------------|-----------|--------------|--------------|--------------|--------------|--------------|-------------------|------------|
+| ...             | ...       | ...          | ...          | ...          | ...          | ...          | ...               | ...        |
 
 ## Acknowledgement
 We appreciate open source projects including: 
