@@ -1,3 +1,5 @@
+[![Hugging Face](https://img.shields.io/badge/HuggingFace-Model-yellow.svg)](https://huggingface.co/serag-ai/SAMF)
+
 # [MICCAI' 25] From Slices to Volumes: Multi-Scale Fusion of 2D and 3D Features for CT Scan Report Generation
 
 This is an official implementation of **[MICCAI 2025]** - From Slices to Volumes: Multi-Scale Fusion of 2D and 3D Features for CT Scan Report Generation
@@ -45,13 +47,15 @@ To fine-tune the model, run the following script:
 sh script/finetune_phi3.sh
 ```
 
-Ensure you have set the dataset directory and related file paths in your bash script before running the script. Refer to `script/finetune_phi3.sh` for detailed configuration.
+Ensure you have set the dataset directory and related file paths in your bash script before running the script. Refer to `script/finetune_phi3.sh` for detailed configuration. 
+
+**Our slice-based pretrained vision encoder is available for download from [serag-ai/SAMF](https://huggingface.co/serag-ai/SAMF).**
 
 ## Merge
 
 After finetuning, you need to merge LoRA weights with the original weights. Follow :
 
-**Run the Merge Script** 🔄:
+**Run the Merge Script**:
    ```sh
    python3 -u merge_lora_weights_and_save_hf_model.py \
    --model_type phi3 \
@@ -62,12 +66,12 @@ After finetuning, you need to merge LoRA weights with the original weights. Foll
 
 ## Evaluation
 
-To perform evaluation using provided metrics, follow :
+The pretrained weights for *SAMF + Ao2d* are available through [serag-ai/SAMF](https://huggingface.co/serag-ai/SAMF). To evaluate using the provided metrics, follow these steps:
 
-**Run the vlm/eval/eval_caption.py Script** 🔄:
+**Run the vlm/eval/eval_caption.py Script**:
    ```sh
     python3 -u /src/vlm/eval/eval_caption.py \
-    --model_name_or_path PATH_TO_MERGED_MODEL/ \
+    --model_name_or_path serag-ai/SAMF/ \
     --output_dir PATH_TO_OUTPUT_DIR
    ```
 
@@ -81,7 +85,7 @@ The format for training medical report generation is:
 |-------------|-------------|
 | image_path  | text        |
 
-For visual-question answering (VQA), the CSV header is as follows:
+For visual-question answering (VQA), the CSV header is as follows(see `dataset/` for more information):
 
 | **Question ID** | **Image** | **Question** | **Choice A** | **Choice B** | **Choice C** | **Choice D** | **Answer Choice** | **Answer** |
 |-----------------|-----------|--------------|--------------|--------------|--------------|--------------|-------------------|------------|
