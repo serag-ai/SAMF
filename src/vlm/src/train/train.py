@@ -8,7 +8,7 @@ from transformers import TrainerCallback
 from transformers import AutoTokenizer, LlamaForCausalLM
 from dataclasses import dataclass, field
 from vlm.src.dataset.multi_dataset import (
-    CT_RATE_CapDataset,
+    CT_RATE_UniDatasets,
 )
 from vlm.src.model.language_model import LlavaPhi3ForCausalLM
 from llava_trainer import LlavaTrainer
@@ -96,6 +96,15 @@ class DataArguments:
         metadata={"help": "Path to training csv file."},
     )
     val_csv_file: str = field(
+        default="./dataset/val.csv",
+        metadata={"help": "Path to validation csv file."},
+    )
+
+    train_mcq_file: str = field(
+        default="./dataset/train.csv",
+        metadata={"help": "Path to training csv file."},
+    )
+    val_mcq_file: str = field(
         default="./dataset/val.csv",
         metadata={"help": "Path to validation csv file."},
     )
@@ -397,15 +406,17 @@ def main():
     data_args.proj_out_num = model.get_model().mm_projector.proj_out_num
     rank0_print("vision tokens output from projector: ", data_args.proj_out_num)
 
-    train_dataset = CT_RATE_CapDataset(
+    train_dataset = CT_RATE_UniDatasets(
         data_args,
-        csv_path=data_args.train_csv_file,
+        cap_csv_path=data_args.train_csv_file,
+        mcq_csv_path=data_args.train_mcq_file,
         tokenizer=tokenizer,
     )
 
-    eval_dataset = CT_RATE_CapDataset(
+    eval_dataset = CT_RATE_UniDatasets(
         data_args,
-        csv_path=data_args.val_csv_file,
+        cap_csv_path=data_args.val_csv_file,
+        mcq_csv_path=data_args.val_mcq_file,
         tokenizer=tokenizer,
         mode="valid",
     )

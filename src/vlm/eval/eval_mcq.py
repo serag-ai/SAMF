@@ -5,17 +5,12 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 import argparse
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm
-from vlm.src.dataset.multi_dataset import CT_RATE_CapDataset
+from vlm.src.dataset.multi_dataset import (
+    CT_RATE_Multi_Choice_Dataset,
+)
 from vlm.src.model.language_model import LlavaPhi3ForCausalLM
-
-import evaluate
-
-bleu = evaluate.load("bleu")
-bertscore = evaluate.load("bertscore")
-meteor = evaluate.load("meteor")
-rouge = evaluate.load("rouge")
 
 
 def seed_everything(seed):
@@ -39,8 +34,9 @@ def parse_args(args=None):
     parser.add_argument("--max_new_tokens", type=int, default=256)
     parser.add_argument("--do_sample", type=bool, default=False)
     parser.add_argument("--top_p", type=float, default=None)
-    parser.add_argument("--temperature", type=float, default=0.3)
+    parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--device", type=str, default="cuda", choices=["cuda", "cpu"])
+
     # data
     parser.add_argument(
         "--data_root",
@@ -55,7 +51,7 @@ def parse_args(args=None):
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="./evaluation",
+        default="./evaluation_vqa",
     )
 
     parser.add_argument("--proj_out_num", type=int, default=256)
@@ -83,17 +79,19 @@ def main():
     )
 
     model = LlavaPhi3ForCausalLM.from_pretrained(
-        args.model_name_or_path, device_map="auto", cache_dir=None
+        args.model_name_or_path,
+        device_map="auto",
+        cache_dir=None,
     )
 
     model = model.to(device=device)
 
     model.eval()
 
-    test_dataset = CT_RATE_CapDataset(
+    test_dataset = CT_RATE_Multi_Choice_Dataset(
         args,
-        csv_path=args.csv_file,
         tokenizer=tokenizer,
+        csv_cap_path=args.csv_file,
         mode="test",
     )  # test1k
 
@@ -108,8 +106,7 @@ def main():
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    output_path = os.path.join(args.output_dir, "eval_caption.csv")
-
+    output_path = os.path.join(args.output_dir, "eval_mcq.csv")
     with open(output_path, mode="w") as outfile:
         writer = csv.writer(outfile)
         writer.writerow(
@@ -117,15 +114,6 @@ def main():
                 "Question",
                 "Ground Truth",
                 "pred",
-                "bleu1",
-                "bleu2",
-                "bleu3",
-                "bleu4",
-                "rouge1",
-                "rouge2",
-                "rougeL",
-                "meteor",
-                "bert_f1",
             ]
         )
         with torch.no_grad():
@@ -150,63 +138,11 @@ def main():
                     generation, skip_special_tokens=True
                 )
 
-                result = dict()
-
-                decoded_preds, decoded_labels = postprocess_text(
-                    generated_texts, answer
-                )
-                bleu_score = bleu.compute(
-                    predictions=decoded_preds, references=decoded_labels, max_order=1
-                )
-                result["bleu1"] = bleu_score["bleu"]
-
-                bleu_score = bleu.compute(
-                    predictions=decoded_preds, references=decoded_labels, max_order=2
-                )
-                result["bleu2"] = bleu_score["bleu"]
-
-                bleu_score = bleu.compute(
-                    predictions=decoded_preds, references=decoded_labels, max_order=3
-                )
-                result["bleu3"] = bleu_score["bleu"]
-
-                bleu_score = bleu.compute(
-                    predictions=decoded_preds, references=decoded_labels, max_order=4
-                )
-                result["bleu4"] = bleu_score["bleu"]
-
-                rouge_score = rouge.compute(
-                    predictions=decoded_preds,
-                    references=decoded_labels,
-                )
-                result["rouge1"] = rouge_score["rouge1"]
-                result["rouge2"] = rouge_score["rouge2"]
-                result["rougeL"] = rouge_score["rougeL"]
-
-                meteor_score = meteor.compute(
-                    predictions=decoded_preds, references=decoded_labels
-                )
-                result["meteor"] = meteor_score["meteor"]
-
-                bert_score = bertscore.compute(
-                    predictions=decoded_preds, references=decoded_labels, lang="en"
-                )
-                result["bert_f1"] = sum(bert_score["f1"]) / len(bert_score["f1"])
-
                 writer.writerow(
                     [
                         question[0],
                         answer[0],
                         generated_texts[0],
-                        result["bleu1"],
-                        result["bleu2"],
-                        result["bleu3"],
-                        result["bleu4"],
-                        result["rouge1"],
-                        result["rouge2"],
-                        result["rougeL"],
-                        result["meteor"],
-                        result["bert_f1"],
                     ]
                 )
 

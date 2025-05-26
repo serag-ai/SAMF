@@ -1,4 +1,5 @@
-deepspeed  ../vlm/src/train/train.py \
+export PYTHONPATH=$PYTHONPATH:SAMF/src
+deepspeed  SAMF/src/vlm/src/train/train.py \
     --version v0 \
     --model_name_or_path microsoft/Phi-3-mini-4k-instruct \
     --model_type phi3 \
@@ -27,7 +28,9 @@ deepspeed  ../vlm/src/train/train.py \
     --gradient_checkpointing False \
     --dataloader_pin_memory True\
     --dataloader_num_workers 8 \
-    --data_root PATH_TO_DATASET_DIR/ \
+    --data_root PATH_TO_DIR_WITH_CTSCAN_IMAGES/ \
     --train_csv_file PATH_TO_TRAINING_FILE/ \
     --val_csv_file PATH_TO_VALIDATION_FILE/ \
+    --train_mcq_file PATH_TO_TRAIN_MCQ_FILE.csv \
+    --val_mcq_file PATH_TO_VAL_MCQ_FILE.csv \
     --report_to none
