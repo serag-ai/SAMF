@@ -51,7 +51,7 @@ def parse_args(args=None):
     parser.add_argument(
         "--csv_file",
         type=str,
-        default="/acfs-home/abh4006/serag_AI_lab/shared/ct_rate/ct_rate_validation.csv",
+        default="PATH_TO_TEST_CSV_FILE.csv",
     )
     parser.add_argument(
         "--output_dir",
