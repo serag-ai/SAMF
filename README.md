@@ -2,7 +2,10 @@
 
 # [MICCAI' 25] From Slices to Volumes: Multi-Scale Fusion of 2D and 3D Features for CT Scan Report Generation
 
-This is an official implementation of **[MICCAI 2025]** - From Slices to Volumes: Multi-Scale Fusion of 2D and 3D Features for CT Scan Report Generation
+This is an official implementation of **[MICCAI 2025]** paper:
+> **"From Slices to Volumes: Multi-scale Fusion of 2D and 3D Features for CT Scan Report Generation"**  
+> *Abdullah Hosseini, Ahmed Ibrahim, and Ahmed Serag. Medical Image Computing and Computer Assisted Intervention – MICCAI (2025)*
+> *[Downlad Paper](https://link.springer.com/chapter/10.1007/978-3-032-04978-0_26)*
 
 ## Project overview
  <p align="center">
