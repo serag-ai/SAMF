@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: If you use this software, please cite both the article from preferred-citation and the software itself.
+authors:
+  - family-names: Hosseini
+    given-names: Abdullah
+  - family-names: Ibrahim
+    given-names: Ahmed
+  - family-names: Serag
+    given-names: Ahmed
+title: 'From Slices to Volumes: Multi-scale Fusion of 2D and 3D Features for CT Scan Report Generation'
+version: 1.0.0
+date-released: '2025-01-11'
+preferred-citation:
+  authors:
+    - family-names: Hosseini
+      given-names: Abdullah
+    - family-names: Ibrahim
+      given-names: Ahmed
+    - family-names: Serag
+      given-names: Ahmed
+  title: 'From Slices to Volumes: Multi-scale Fusion of 2D and 3D Features for CT Scan Report Generation'
+  type: conference-paper
+  pages: 268--277
+  year: '2025'
+  collection-title: International Conference on Medical Image Computing and Computer-Assisted Intervention
+  conference: {}
+  publisher: {}
