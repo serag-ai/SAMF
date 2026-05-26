@@ -94,6 +94,20 @@ For visual-question answering (VQA), the CSV header is as follows(see `dataset/`
 |-----------------|-----------|--------------|--------------|--------------|--------------|--------------|-------------------|------------|
 | ...             | ...       | ...          | ...          | ...          | ...          | ...          | ...               | ...        |
 
+## Citation
+If you use the code or model weights from this repository, please cite [our paper](https://link.springer.com/chapter/10.1007/978-3-032-04978-0_26): 
+
+```bibtex
+@inproceedings{hosseini2025slices,
+  title={From Slices to Volumes: Multi-scale Fusion of 2D and 3D Features for CT Scan Report Generation},
+  author={Hosseini, Abdullah and Ibrahim, Ahmed and Serag, Ahmed},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={268--277},
+  year={2025},
+  organization={Springer}
+}
+```
+
 ## Acknowledgement
 We appreciate open source projects including: 
 [LLaVA](https://github.com/haotian-liu/LLaVA) and 
